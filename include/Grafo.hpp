@@ -3,18 +3,24 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-// usado lista de adjacência de vector de vector para fácil acesso de vértices/arestas
 
 class Grafo{
     public:
-        Grafo();
+        Grafo(double vertices, double arestas);
+        double getVertices() const;
+        double getArestas() const;
+        Grafo grafoReverso() const;
         void adicionaAresta(const std::string& inicio, const std::string& fim);
-        void imprimeAresta(const std::string& inicio, const std::string& fim);
-        void imprimeVertice(const std::string&vertice);
-        void imprimeAdjacencia(const std::string&vertice);
+        void imprimeAresta(const std::string& inicio, const std::string& fim) const;
+        void imprimeVertice(const std::string&vertice) const;
+        void imprimeAdjacencia(const std::string&vertice) const;
+        const std::unordered_map<std::string, std::vector<std::string>>& getListaAdj() const;
+        void imprimeGrafo() const;
+
     private:
         std::unordered_map<std::string, std::vector<std::string>> listaAdj;
+        double vertices;  
+        double arestas;  
 };
-
 
 #endif
