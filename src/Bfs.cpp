@@ -36,24 +36,27 @@ std::pair<double, double> bfs(const Grafo& g, const std::string& inicio) {
         std::string atual = q.front();
         q.pop();
 
-        // Processa cada vizinho do vértice atual
-        for (const std::string& vizinho : g.getListaAdj().find(atual)->second) {
-            // Se o vizinho ainda não foi visitado
-            if (!visitado[vizinho]) {
-                visitado[vizinho] = true;  // Marca o vizinho como visitado
-                distancia[vizinho] = distancia[atual] + 1;
-                altura[vizinho] = altura[atual] + 1;
-                maxAltura = std::max(static_cast<double>(maxAltura), altura[vizinho]);
-                estradasTotal += 1;
-                q.push(vizinho);
-                verticesAlcancados++;  // Conta o vértice alcançado
-                
-                // Log para depuração
-                std::cout << "Vizinho " << vizinho << " adicionado, distancia: " << distancia[vizinho] 
-                          << ", altura: " << altura[vizinho] << std::endl;
-                std::cout << "Altura máxima: " << maxAltura << std::endl;
-                std::cout << "Total de estradas passadas: " << estradasTotal << std::endl;
-                std::cout << "Vértices alcançados: " << verticesAlcancados << std::endl;
+        auto it = g.getListaAdj().find(atual);
+        if (it != g.getListaAdj().end()) {
+            // Processa cada vizinho do vértice atual
+            for (const std::string& vizinho : g.getListaAdj().find(atual)->second) {
+                // Se o vizinho ainda não foi visitado
+                if (!visitado[vizinho]) {
+                    visitado[vizinho] = true;  // Marca o vizinho como visitado
+                    distancia[vizinho] = distancia[atual] + 1;
+                    altura[vizinho] = altura[atual] + 1;
+                    maxAltura = std::max(static_cast<double>(maxAltura), altura[vizinho]);
+                    estradasTotal += 1;
+                    q.push(vizinho);
+                    verticesAlcancados++;  // Conta o vértice alcançado
+                    
+                    // Log para depuração
+                    std::cout << "Vizinho " << vizinho << " adicionado, distancia: " << distancia[vizinho] 
+                            << ", altura: " << altura[vizinho] << std::endl;
+                    std::cout << "Altura máxima: " << maxAltura << std::endl;
+                    std::cout << "Total de estradas passadas: " << estradasTotal << std::endl;
+                    std::cout << "Vértices alcançados: " << verticesAlcancados << std::endl;
+                }
             }
         }
     }

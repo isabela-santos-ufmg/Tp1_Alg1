@@ -4,15 +4,14 @@
 #include <iostream>
 
 int main() {
-    Grafo meuGrafo(5, 6);
+    Grafo meuGrafo(6, 5);
 
     // Adicionando arestas entre cidades
-    meuGrafo.adicionaAresta("L", "R");
-    meuGrafo.adicionaAresta("R", "Y");
-    meuGrafo.adicionaAresta("Y", "L");
-    meuGrafo.adicionaAresta("Y", "B");
-    meuGrafo.adicionaAresta("B", "U");
-    meuGrafo.adicionaAresta("U", "Y");
+    meuGrafo.adicionaAresta("V", "O");
+    meuGrafo.adicionaAresta("O", "IS");
+    meuGrafo.adicionaAresta("IT", "B");
+    meuGrafo.adicionaAresta("B", "Y");
+    meuGrafo.adicionaAresta("V", "IT");
 
     meuGrafo.imprimeGrafo();
     
