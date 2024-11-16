@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     
     Grafo meuGrafo(cidades, estradas);
     
-    for (int i = 0; i < estradas; i++)
+    for (int i = 0; i < estradas; i++)  // Corrigido para 'int'
     {
         if (std::getline(arq, linha))
         {
@@ -48,45 +48,33 @@ int main(int argc, char* argv[])
 
     meuGrafo.imprimeGrafo();
     
-    // Define a capital usando a função BFS
+    // Identificando a cidade capital
     std::string cidadeCapital = capital(meuGrafo);
     std::cout << "A capital é: " << cidadeCapital << std::endl;
 
-    // Obtém as componentes fortemente conectadas usando Kosaraju
-    auto componentes = kosaraju(meuGrafo);
+    // Chama o algoritmo de Kosaraju para encontrar as componentes fortemente conectadas
+    std::vector<std::vector<std::string>> componentes = kosaraju(meuGrafo);
     
     // Exibe as componentes fortemente conectadas
-    std::cout << "Componentes fortemente conectadas:" << std::endl;
+    std::cout << "Componentes fortemente conectadas retornadas pelo Kosaraju:" << std::endl;
     for (size_t i = 0; i < componentes.size(); ++i) {
-        std::cout << "Componente " << i + 1 << ": ";
-        for (const std::string& vertice : componentes[i]) {
+        std::cout << "Componente " << i << " (Tamanho: " << componentes[i].size() << "): ";
+        for (const auto& vertice : componentes[i]) {
             std::cout << vertice << " ";
         }
         std::cout << std::endl;
     }
+    
 
-    // Calcula e exibe o número de batalhões necessários
-    int numeroBatalhoes = componentes.size() - 1;
-    std::cout << "Número de batalhões necessários: " << numeroBatalhoes << std::endl;
 
-    // Verifica e exibe os batalhões escolhidos para cada componente que não contém a capital
-    std::cout << "Escolha dos batalhões:" << std::endl;
-    for (size_t i = 0; i < componentes.size(); ++i) {
-        bool capitalNaComponente = false;
-
-        // Verifica manualmente se a capital está presente na componente
-        for (const std::string& vertice : componentes[i]) {
-            if (vertice == cidadeCapital) {
-                capitalNaComponente = true;
-                break;
-            }
-        }
-
-        // Se a capital não está nesta componente, então encontramos um vértice para ser o batalhão
-        if (!capitalNaComponente) {
-            std::string batalhaoEscolhido = batalhao(meuGrafo, cidadeCapital, componentes);
-            std::cout << "Componente " << i + 1 << ": Batalhão designado na cidade " << batalhaoEscolhido << std::endl;
-        }
+    // Calcula os batalhões mais próximos da capital
+    std::vector<std::string> batalhoesProximos = batalhoes(meuGrafo, cidadeCapital, componentes);
+    
+    // Exibe o número de batalhões e suas localizações
+    std::cout << "Número de batalhões: " << componentes.size() - 1 << std::endl;  // Exclui a capital
+    std::cout << "Batalhões mais próximos da capital:" << std::endl;
+    for (const auto& b : batalhoesProximos) {
+        std::cout << "Batalhão em: " << b << std::endl;
     }
 
     arq.close();
