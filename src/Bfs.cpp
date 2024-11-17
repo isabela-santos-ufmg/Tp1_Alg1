@@ -21,7 +21,7 @@ std::pair<double, double> bfs(const Grafo& g, const std::string& inicio) {
         altura[pair.first] = 0;
     }
 
-    std::cout << "Bfs(" << inicio << ")" << std::endl;
+    // std::cout << "Bfs(" << inicio << ")" << std::endl;
     
     // Coloca o vértice inicial na fila
     q.push(inicio);
@@ -67,7 +67,7 @@ std::pair<double, double> bfs(const Grafo& g, const std::string& inicio) {
 
     // Verifica se o BFS alcançou todos os vértices do grafo
     if (verticesAlcancados == g.getVertices()) {
-        std::cout << inicio << " alcançou todos os vértices" << std::endl;
+        //std::cout << inicio << " alcançou todos os vértices" << std::endl;
         return {estradasTotal, maxAltura};
     } else {
         // Retorna valores altos se não alcançou todos os vértices
@@ -174,7 +174,7 @@ std::vector<std::string> batalhoes(const Grafo& g, const std::string& capital,
         std::cerr << "Erro: Capital não encontrada em nenhuma das componentes." << std::endl;
         return {};
     } else {
-        std::cout << "Capital encontrada na componente " << indiceCapital << std::endl;
+        // std::cout << "Capital encontrada na componente " << indiceCapital << std::endl;
     }
 
     // Executa a BFS a partir da capital para preencher `distancias`

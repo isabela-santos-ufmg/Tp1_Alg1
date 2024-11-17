@@ -1,11 +1,15 @@
 #include "Grafo.hpp"
 #include "Bfs.hpp"
 #include "Kosaraju.hpp"
+#include "Patrulhamento.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
+#include <sys/stat.h>
+#include <dirent.h>
 
 int main(int argc, char* argv[]) 
 {
@@ -36,7 +40,7 @@ int main(int argc, char* argv[])
     
     Grafo meuGrafo(cidades, estradas);
     
-    for (int i = 0; i < estradas; i++)  // Corrigido para 'int'
+    for (int i = 0; i < estradas; i++) 
     {
         if (std::getline(arq, linha))
         {
@@ -46,14 +50,22 @@ int main(int argc, char* argv[])
         }
     }
 
-    meuGrafo.imprimeGrafo();
-    
     // Identificando a cidade capital
     std::string cidadeCapital = capital(meuGrafo);
-    std::cout << "A capital é: " << cidadeCapital << std::endl;
 
     // Chama o algoritmo de Kosaraju para encontrar as componentes fortemente conectadas
     std::vector<std::vector<std::string>> componentes = kosaraju(meuGrafo);
+
+    // Calcula os batalhões mais próximos da capital
+    std::vector<std::string> batalhoesSecundarios = batalhoes(meuGrafo, cidadeCapital, componentes);
+
+    // Escreve os resultados no arquivo
+    std::cout << cidadeCapital << std::endl;
+    std::cout << componentes.size() - 1 << std::endl;  // Exclui a capital
+    for (const auto& b : batalhoesSecundarios) 
+    {
+        std::cout << b << std::endl;
+    }
     
     // Exibe as componentes fortemente conectadas
     std::cout << "Componentes fortemente conectadas retornadas pelo Kosaraju:" << std::endl;
@@ -64,19 +76,11 @@ int main(int argc, char* argv[])
         }
         std::cout << std::endl;
     }
-    
 
+    // Calculando os patrulhamentos para todas as componentes
+    calcularPatrulhamentos(meuGrafo, componentes, cidadeCapital, batalhoesSecundarios);
 
-    // Calcula os batalhões mais próximos da capital
-    std::vector<std::string> batalhoesProximos = batalhoes(meuGrafo, cidadeCapital, componentes);
-    
-    // Exibe o número de batalhões e suas localizações
-    std::cout << "Número de batalhões: " << componentes.size() - 1 << std::endl;  // Exclui a capital
-    std::cout << "Batalhões mais próximos da capital:" << std::endl;
-    for (const auto& b : batalhoesProximos) {
-        std::cout << "Batalhão em: " << b << std::endl;
-    }
-
+    // Fecha os arquivos
     arq.close();
     return 0;
 }
