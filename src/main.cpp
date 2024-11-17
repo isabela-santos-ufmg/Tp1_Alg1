@@ -68,6 +68,8 @@ int main(int argc, char* argv[])
     }
     
     // Exibe as componentes fortemente conectadas
+    
+    /*
     std::cout << "Componentes fortemente conectadas retornadas pelo Kosaraju:" << std::endl;
     for (size_t i = 0; i < componentes.size(); ++i) {
         std::cout << "Componente " << i << " (Tamanho: " << componentes[i].size() << "): ";
@@ -76,8 +78,9 @@ int main(int argc, char* argv[])
         }
         std::cout << std::endl;
     }
+    */
 
-    // Calculando os patrulhamentos para todas as componentes
+    
     calcularPatrulhamentos(meuGrafo, componentes, cidadeCapital, batalhoesSecundarios);
 
     // Fecha os arquivos

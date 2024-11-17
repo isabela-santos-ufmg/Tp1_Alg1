@@ -28,7 +28,6 @@ bool cicloEuleriano(const Grafo& g, const std::vector<std::string>& componente, 
     return true;
 }
 
-// Função para substituir std::find, procurando um valor em um vetor
 bool encontrarValorNoVetor(const std::vector<std::string>& vetor, const std::string& valor) {
     for (const auto& item : vetor) {
         if (item == valor) {
@@ -43,10 +42,21 @@ std::vector<std::string> encontrarRotaEuleriana(const Grafo& g, const std::vecto
     std::unordered_map<std::string, std::vector<std::string>> grafoLocal;
     
     // Copia as arestas do grafo original para o grafo local
+    // Copia as arestas do grafo original para o grafo local, mas apenas das componentes
     for (const auto& vertice : componente) {
         auto it = g.getListaAdj().find(vertice);
         if (it != g.getListaAdj().end()) {
-            grafoLocal[vertice] = it->second;
+            // Para cada adjacência, verificamos se está na componente
+            std::vector<std::string> adjacenciasFiltradas;
+            
+            for (const auto& adj : it->second) {
+                if (encontrarValorNoVetor(componente, adj)) {
+                    adjacenciasFiltradas.push_back(adj);
+                }
+            }
+
+            // Armazenando as adjacências filtradas no grafo local
+            grafoLocal[vertice] = adjacenciasFiltradas;
         }
     }
 
@@ -82,41 +92,47 @@ std::vector<std::string> encontrarRotaEuleriana(const Grafo& g, const std::vecto
 void calcularPatrulhamentos(const Grafo& g, const std::vector<std::vector<std::string>>& componentes, const std::string& cidadeCapital, const std::vector<std::string>& batalhoes) {
     // Itera sobre cada componente para encontrar os patrulhamentos possíveis
     for (const auto& componente : componentes) {
-        if (componente.size() > 1) { // Ignora componentes com apenas um vértice
-            // Verifica se a componente contém a capital
-            bool temCapital = encontrarValorNoVetor(componente, cidadeCapital);
-
-            // Determina o ponto de partida (capital ou batalhão secundário)
-            std::string pontoDePartida = cidadeCapital;
-
-            if (!temCapital) {
-                // Caso a capital não esteja na componente, o patrulhamento deve começar de um batalhão secundário
-                for (const auto& batalhao : batalhoes) {
-                    // Verifica se algum batalhão da lista de batalhões está na componente
-                    for (const auto& b : componente) {
-                        if (batalhao == b) {
-                            pontoDePartida = b;
-                            break;
-                        }
-                    }
-                    if (pontoDePartida != cidadeCapital) break; // Se encontrar o batalhão, quebra o laço
-                }
-            }
-
-            std::cout << "Componente com patrulhamento possível: ";
-            for (const auto& vertice : componente) {
-                std::cout << vertice << " ";
-            }
-            std::cout << std::endl;
-
-            // Encontra a rota Euleriana para a componente
-            std::vector<std::string> rota = encontrarRotaEuleriana(g, componente, pontoDePartida);
-            
-            std::cout << "Rota de patrulhamento: ";
-            for (const auto& v : rota) {
-                std::cout << v << " ";
-            }
-            std::cout << std::endl;
+        if (componente.size() == 1) {
+            // Se a componente possui apenas um vértice, não realizamos patrulhamento nela
+            //std::cout << "Componente com apenas 1 vértice (sem patrulhamento): " << componente[0] << std::endl;
+            continue;  // Pula para a próxima componente
         }
+
+        // Caso a componente tenha mais de 1 vértice, realiza o patrulhamento
+        //std::cout << "Componente com patrulhamento possível: ";
+        for (const auto& vertice : componente) {
+            std::cout << vertice << " ";
+        }
+        std::cout << std::endl;
+
+        // Verifica se a componente contém a capital
+        bool temCapital = encontrarValorNoVetor(componente, cidadeCapital);
+
+        // Determina o ponto de partida (capital ou batalhão secundário)
+        std::string pontoDePartida = cidadeCapital;
+
+        if (!temCapital) {
+            // Caso a capital não esteja na componente, o patrulhamento deve começar de um batalhão secundário
+            for (const auto& batalhao : batalhoes) {
+                // Verifica se algum batalhão da lista de batalhões está na componente
+                for (const auto& b : componente) {
+                    if (batalhao == b) {
+                        pontoDePartida = b;
+                        break;
+                    }
+                }
+                if (pontoDePartida != cidadeCapital) break; // Se encontrar o batalhão, quebra o laço
+            }
+        }
+
+        // Agora, geramos a rota de patrulhamento apenas com os vértices da componente
+        // Chamamos a função de geração de rota, mas garantindo que ela considera apenas os vértices dessa componente
+        std::vector<std::string> rota = encontrarRotaEuleriana(g, componente, pontoDePartida);
+
+        //std::cout << "Rota de patrulhamento: ";
+        for (const auto& v : rota) {
+            std::cout << v << " ";
+        }
+        std::cout << std::endl;
     }
 }
